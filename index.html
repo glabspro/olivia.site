@@ -845,16 +845,23 @@
         // Fetch Landing Config
         async function loadLandingConfig() {
             try {
-                // Strategy: Fetch the first user marked as Admin to get system config
+                // Strategy: Fetch ANY profile that has system_config set.
+                // We use 'not.is' filter to find non-null configs.
                 const { data, error } = await supabase
                     .from('profiles')
                     .select('system_config')
-                    .eq('is_admin', true)
+                    .not('system_config', 'is', null)
                     .limit(1)
                     .maybeSingle();
+                
+                if (error) {
+                    console.error("Error fetching landing config:", error);
+                    return;
+                }
 
                 if (data && data.system_config && data.system_config.landing) {
                     const config = data.system_config.landing;
+                    console.log("Landing config loaded:", config);
                     
                     // Update Social Links if present
                     if (config.facebookUrl) document.getElementById('social-fb').href = config.facebookUrl;
