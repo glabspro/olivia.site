@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 <head>
@@ -709,7 +710,7 @@
 
     <!-- OLIVIA SALES BOT WIDGET -->
     <!-- Added type=button and z-index 9999 for maximum mobile visibility -->
-    <button id="olivia-widget" type="button" class="fixed bottom-8 md:bottom-6 right-4 z-[9999] flex items-center gap-3 group cursor-pointer outline-none tap-highlight-transparent shadow-2xl rounded-full bg-pink-600 text-white hover:scale-105 transition-transform duration-300 p-4" onclick="window.toggleChat()">
+    <button id="olivia-widget" type="button" class="fixed bottom-6 right-4 z-[9999] flex items-center gap-3 group cursor-pointer outline-none tap-highlight-transparent shadow-2xl rounded-full bg-pink-600 text-white hover:scale-105 transition-transform duration-300 p-4" onclick="window.toggleChat()">
         <!-- Label Pill -->
         <div class="bg-gray-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg absolute right-full mr-4 top-1/2 -translate-y-1/2 whitespace-nowrap hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             Asistente Oliv-IA
@@ -810,6 +811,10 @@
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Video Principal (Demo URL)</label>
                         <input type="text" id="conf-mainVideo" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none" placeholder="https://youtube.com...">
                     </div>
+                    <div class="col-span-2">
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Miniatura del Video Principal (URL)</label>
+                        <input type="text" id="conf-mainVideoThumb" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://...">
+                    </div>
                 </div>
                 
                 {/* Hidden Sales Phone Field (Managed via Admin Panel usually, but kept for compatibility) */}
@@ -842,13 +847,12 @@
             <div class="px-6 py-4 bg-gray-50 flex justify-end gap-3 border-t border-gray-100 shrink-0">
                 <button onclick="window.closeConfigModal()" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-900">Cancelar</button>
                 <button onclick="window.saveConfig()" class="px-6 py-2 bg-gray-900 text-white text-sm font-bold rounded-lg shadow-md hover:bg-black transition-all flex items-center gap-2">
-                    <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios
+                    <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios del Sistema
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- SINGLE MODULE SCRIPT (Unified Logic) -->
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.44.4';
         
@@ -876,32 +880,6 @@
         let clickCount = 0;
         let chatOpen = false;
         let hasGreeted = false;
-
-        // --- YOUTUBE HELPER ---
-        window.playMainVideo = function() {
-            if (!currentConfig.mainVideoUrl) return;
-            
-            let videoId = "";
-            // Regex to extract ID from common YouTube URL formats
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = currentConfig.mainVideoUrl.match(regExp);
-            
-            if (match && match[2].length == 11) {
-                videoId = match[2];
-            } else {
-                console.warn("Invalid YouTube URL");
-                return;
-            }
-
-            const placeholder = getEl('video-placeholder');
-            const iframeContainer = getEl('video-frame');
-            
-            if(placeholder) placeholder.classList.add('hidden');
-            if(iframeContainer) {
-                iframeContainer.classList.remove('hidden');
-                iframeContainer.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-            }
-        }
 
         // --- CHATBOT LOGIC (Restored 2-Step Flow) ---
         window.toggleChat = function() {
@@ -1035,6 +1013,44 @@
             }
         };
 
+        // --- YOUTUBE HELPER ---
+        window.playMainVideo = function() {
+            if (!currentConfig.mainVideoUrl) return;
+            
+            let videoId = "";
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = currentConfig.mainVideoUrl.match(regExp);
+            
+            if (match && match[2].length == 11) {
+                videoId = match[2];
+            } else {
+                console.warn("Invalid YouTube URL");
+                return;
+            }
+
+            const placeholder = getEl('video-placeholder');
+            const iframeContainer = getEl('video-frame');
+            
+            if(placeholder) placeholder.classList.add('hidden');
+            if(iframeContainer) {
+                iframeContainer.classList.remove('hidden');
+                iframeContainer.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+            }
+        }
+
+        window.scrollToVideo = function(e) {
+            e.preventDefault();
+            const section = document.getElementById('demos');
+            const videoContainer = document.getElementById('video-container');
+            section.scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => {
+                videoContainer.classList.add('highlight-effect');
+                setTimeout(() => {
+                    videoContainer.classList.remove('highlight-effect');
+                }, 1500);
+            }, 800);
+        };
+
         // --- CONFIGURATION & LANDING LOGIC ---
         window.handleLogoClick = function(e) {
             e.preventDefault();
@@ -1058,14 +1074,12 @@
 
         async function loadLandingConfig() {
             try {
-                // Attempt to get session (non-blocking)
                 const { data } = await supabase.auth.getSession();
                 isLoggedIn = !!data?.session;
                 updateAuthStatus();
             } catch(e) { console.warn("Auth check skipped"); }
 
             try {
-                // 1. Local Override
                 const localOverride = localStorage.getItem('olivia_landing_config_override');
                 let localParsed = {};
                 if (localOverride) {
@@ -1074,12 +1088,13 @@
                     currentConfig = localParsed;
                 }
 
-                // 2. DB Fetch
+                // FIX: Fetch multiple admin profiles and find the most recently updated one with valid landing config
                 const { data: dbData } = await supabase
                     .from('profiles')
-                    .select('settings') 
+                    .select('settings, updated_at') 
                     .eq('is_admin', true)
                     .neq('settings', null) 
+                    .order('updated_at', { ascending: false }) // Get most recent update first
                     .limit(5);
 
                 if (dbData && dbData.length > 0) {
@@ -1104,6 +1119,7 @@
                             contactEmail: landingConfig.contactEmail,
                             salesPhone: sysConfig.salesPhoneNumber,
                             mainVideoUrl: landingConfig.mainVideoUrl,
+                            mainVideoThumbnail: landingConfig.mainVideoThumbnail,
                             tutorial1Url: landingConfig.tutorial1Url,
                             tutorial1Thumbnail: landingConfig.tutorial1Thumbnail,
                             tutorial2Url: landingConfig.tutorial2Url,
@@ -1147,10 +1163,15 @@
                 if(waLink) waLink.href = `https://wa.me/${config.salesPhone}`;
             }
 
-            // setHref('video-main-player', config.mainVideoUrl); // Don't overwrite link if we want embed click
+            // setHref('video-main-player', config.mainVideoUrl);
             setHref('tutorial-1-link', config.tutorial1Url);
             setHref('tutorial-2-link', config.tutorial2Url);
             
+            if (config.mainVideoThumbnail) {
+                const el = getEl('video-main-bg');
+                if(el) el.style.backgroundImage = `url('${config.mainVideoThumbnail}')`;
+            }
+
             if (config.tutorial1Thumbnail) {
                 const el = getEl('tutorial-1-thumb');
                 if(el) el.style.backgroundImage = `url('${config.tutorial1Thumbnail}')`;
@@ -1160,7 +1181,6 @@
                 if(el) el.style.backgroundImage = `url('${config.tutorial2Thumbnail}')`;
             }
             
-            // Update internal config for playMainVideo
             currentConfig.mainVideoUrl = config.mainVideoUrl;
         }
         
@@ -1184,6 +1204,7 @@
             setVal('conf-salesPhone', currentConfig.salesPhone);
             setVal('conf-email', currentConfig.contactEmail);
             setVal('conf-mainVideo', currentConfig.mainVideoUrl);
+            setVal('conf-mainVideoThumb', currentConfig.mainVideoThumbnail);
             setVal('conf-tutorial1Url', currentConfig.tutorial1Url);
             setVal('conf-tutorial1Thumb', currentConfig.tutorial1Thumbnail);
             setVal('conf-tutorial2Url', currentConfig.tutorial2Url);
@@ -1230,17 +1251,16 @@
                 contactEmail: getVal('conf-email'),
                 salesPhone: getVal('conf-salesPhone'),
                 mainVideoUrl: getVal('conf-mainVideo'),
+                mainVideoThumbnail: getVal('conf-mainVideoThumb'),
                 tutorial1Url: getVal('conf-tutorial1Url'),
                 tutorial1Thumbnail: getVal('conf-tutorial1Thumb'),
                 tutorial2Url: getVal('conf-tutorial2Url'),
                 tutorial2Thumbnail: getVal('conf-tutorial2Thumb'),
             };
 
-            // 1. Always Save Locally
             localStorage.setItem('olivia_landing_config_override', JSON.stringify(newConfig));
             applyConfig(newConfig);
             
-            // 2. Try to Sync to Cloud
             if (isLoggedIn) {
                 try {
                     const { data: { session } } = await supabase.auth.getSession();
@@ -1253,7 +1273,7 @@
                             ...currentSettings,
                             system_config: {
                                 ...existingSystemConfig,
-                                ...fullSystemConfig,
+                                salesPhoneNumber: newConfig.salesPhone,
                                 landing: {
                                     ...(existingSystemConfig.landing || {}),
                                     ...newConfig
@@ -1261,7 +1281,7 @@
                             }
                         };
 
-                        const { error } = await supabase.from('profiles').update({ settings: mergedSettings }).eq('id', session.user.id);
+                        const { error } = await supabase.from('profiles').update({ settings: mergedSettings, updated_at: new Date().toISOString() }).eq('id', session.user.id);
                         
                         if (error) {
                             console.error("Cloud sync error:", error);
@@ -1279,54 +1299,26 @@
             
             closeConfigModal();
         };
-
-        // --- TABS Logic ---
-        window.scrollToVideo = function(e) {
-            e.preventDefault();
-            const section = document.getElementById('demos');
-            const videoContainer = document.getElementById('video-container');
-            
-            section.scrollIntoView({ behavior: 'smooth' });
-            
-            // Wait for scroll then highlight
-            setTimeout(() => {
-                videoContainer.classList.add('highlight-effect');
-                setTimeout(() => {
-                    videoContainer.classList.remove('highlight-effect');
-                }, 1500);
-            }, 800);
-        };
-
+        
+        // TABS & ROTATION
         window.switchTab = function(stepId) {
             if (window.stopAutoRotate) window.stopAutoRotate();
-            
-            document.querySelectorAll('.tab-content').forEach(el => {
-                el.classList.remove('active');
-                el.style.display = 'none';
-            });
+            document.querySelectorAll('.tab-content').forEach(el => { el.classList.remove('active'); el.style.display = 'none'; });
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('bg-pink-600', 'text-white', 'shadow-lg', 'active');
                 btn.classList.add('bg-white', 'text-gray-600', 'hover:bg-gray-100');
                 const bar = btn.querySelector('.progress-bar');
                 if(bar) bar.style.width = '0%';
             });
-            
             const activeContent = getEl(stepId);
-            if (activeContent) {
-                activeContent.style.display = 'flex';
-                setTimeout(() => activeContent.classList.add('active'), 10);
-            }
-
+            if (activeContent) { activeContent.style.display = 'flex'; setTimeout(() => activeContent.classList.add('active'), 10); }
             const activeBtn = getEl('tab-' + stepId);
             if (activeBtn) {
                 activeBtn.classList.remove('bg-white', 'text-gray-600', 'hover:bg-gray-100');
                 activeBtn.classList.add('bg-pink-600', 'text-white', 'shadow-lg', 'active');
             }
         };
-        
-        window.manualSwitchTab = function(stepId) {
-            window.switchTab(stepId);
-        };
+        window.manualSwitchTab = function(stepId) { window.switchTab(stepId); };
 
         let rotationInterval;
         let currentTab = 1;
@@ -1336,7 +1328,6 @@
         window.startAutoRotate = function() {
             if (window.stopAutoRotate) window.stopAutoRotate();
             animateProgressBar(currentTab);
-
             rotationInterval = setInterval(() => {
                 currentTab = currentTab < totalTabs ? currentTab + 1 : 1;
                 window.switchTab('step' + currentTab); 
@@ -1346,10 +1337,7 @@
 
         window.stopAutoRotate = function() {
             clearInterval(rotationInterval);
-            document.querySelectorAll('.progress-bar').forEach(bar => {
-                bar.style.width = '0%';
-                bar.style.transition = 'none';
-            });
+            document.querySelectorAll('.progress-bar').forEach(bar => { bar.style.width = '0%'; bar.style.transition = 'none'; });
         };
 
         function animateProgressBar(tabIndex) {
@@ -1365,26 +1353,15 @@
                 }
             }
         }
-        
         window.startAutoRotate();
 
         const mobileMenuBtn = getEl('mobile-menu-btn');
         const mobileMenu = getEl('mobile-menu');
-        if(mobileMenuBtn) {
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
-        window.closeMobileMenu = function() {
-            if(mobileMenu) mobileMenu.classList.add('hidden');
-        };
+        if(mobileMenuBtn) { mobileMenuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); }); }
+        window.closeMobileMenu = function() { if(mobileMenu) mobileMenu.classList.add('hidden'); };
 
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); } });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
