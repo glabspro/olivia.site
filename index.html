@@ -149,7 +149,7 @@
         <div class="container mx-auto px-4 md:px-6 py-3 md:py-4">
             <div class="flex justify-between items-center">
                 <!-- Logo -->
-                <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <div class="flex items-center gap-2 cursor-pointer select-none" onclick="handleLogoClick(event)">
                     <div class="w-8 h-8 flex items-center justify-center bg-pink-600 rounded-lg shadow-sm">
                         <span class="text-white font-bold text-xl">O</span>
                     </div>
@@ -642,7 +642,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                     <!-- Main Video -->
                     <div class="lg:col-span-2 bg-gray-900 rounded-2xl overflow-hidden shadow-xl relative group aspect-video reveal">
-                        <div class="absolute inset-0 bg-cover bg-center opacity-60" style="background-image: url('https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80');"></div>
+                        <div id="video-main-bg" class="absolute inset-0 bg-cover bg-center opacity-60" style="background-image: url('https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80');"></div>
                         <div class="absolute inset-0 flex items-center justify-center">
                             <a href="#" id="video-main-player" target="_blank" class="w-16 h-16 md:w-20 md:h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 active:scale-95 transition-transform hover:scale-110 duration-300">
                                 <i data-lucide="play" class="w-6 h-6 md:w-8 md:h-8 text-white fill-current ml-1"></i>
@@ -783,23 +783,22 @@
         </div>
     </footer>
 
-    <!-- OLIVIA SALES BOT WIDGET (Updated with requested design) -->
+    <!-- OLIVIA SALES BOT WIDGET -->
     <div id="olivia-widget" class="fixed bottom-4 right-4 z-[100] flex items-center gap-3 group cursor-pointer animate-fade-in-up" onclick="toggleChat()">
-        <!-- Label Pill (Hidden on tiny screens to avoid overlay) -->
+        <!-- Label Pill -->
         <div class="bg-gray-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg transform transition-all group-hover:-translate-x-1 border border-gray-700 hidden sm:block">
             Asistente Oliv-IA
         </div>
         
-        <!-- Circle Button (Updated Pink with Sparkles) -->
+        <!-- Circle Button -->
         <div class="w-14 h-14 bg-pink-600 rounded-full shadow-2xl flex items-center justify-center relative hover:scale-110 transition-transform border-2 border-white/20">
             <i data-lucide="bot" class="w-7 h-7 text-white fill-current"></i>
             <i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-300 absolute top-2 right-2 animate-pulse fill-current"></i>
         </div>
     </div>
 
-    <!-- Chat Window (Mobile Optimized Width & Height) -->
+    <!-- Chat Window -->
     <div id="chat-window" class="fixed bottom-24 right-4 left-4 sm:left-auto z-[100] hidden bg-white rounded-2xl shadow-2xl w-auto sm:w-96 border border-gray-200 overflow-hidden chat-slide-up transform origin-bottom-right max-w-[calc(100vw-2rem)] flex flex-col max-h-[70vh]">
-        <!-- Header -->
         <div class="bg-gradient-to-r from-pink-600 to-purple-600 p-4 text-white flex justify-between items-center shrink-0">
             <div class="flex items-center gap-3">
                 <div class="relative">
@@ -816,12 +815,8 @@
             <button onclick="toggleChat()" class="p-1 hover:bg-white/10 rounded-full transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
         </div>
 
-        <!-- Messages Area (Flexible Height) -->
-        <div id="chat-messages" class="flex-1 bg-gray-50 p-4 overflow-y-auto space-y-4 custom-scrollbar min-h-0">
-            <!-- Messages will be injected here by JS -->
-        </div>
+        <div id="chat-messages" class="flex-1 bg-gray-50 p-4 overflow-y-auto space-y-4 custom-scrollbar min-h-0"></div>
 
-        <!-- Input Area (Lead Capture) -->
         <div class="p-3 bg-white border-t border-gray-100 shrink-0">
             <a href="https://wa.me/51944894541?text=Hola%20Olivia%2C%20quiero%20una%20demo%20del%20sistema%20SaaS." target="_blank" class="flex items-center justify-center gap-2 w-full py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg">
                 <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></path></svg>
@@ -831,10 +826,7 @@
         </div>
     </div>
 
-    <!-- ADMIN EDIT BUTTON -->
-    <button onclick="openConfigModal()" class="fixed bottom-4 left-4 z-[100] bg-gray-900 text-white p-3 rounded-full shadow-lg border border-gray-700 hover:bg-black transition-all group" title="Configurar Landing Page">
-        <i data-lucide="settings" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-500"></i>
-    </button>
+    <!-- ADMIN EDIT BUTTON (Hidden by default, triggered by logo click) -->
 
     <!-- CONFIG MODAL -->
     <div id="config-modal" class="fixed inset-0 z-[110] hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
@@ -854,40 +846,74 @@
 
             <div class="p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">URL de App (Login)</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">URL de la Aplicación (Login/Registro)</label>
+                    <p class="text-[10px] text-gray-400 mb-2">A donde se redirige a los usuarios cuando hacen clic en "Iniciar Sesión" o "Empezar Gratis".</p>
                     <input type="text" id="conf-appUrl" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-pink-500 outline-none" placeholder="https://app.olivia.com">
                 </div>
+                
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Facebook</label>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Facebook URL</label>
                         <input type="text" id="conf-facebookUrl" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Instagram</label>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Instagram URL</label>
                         <input type="text" id="conf-instagramUrl" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-pink-500 outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">TikTok</label>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tiktok URL</label>
                         <input type="text" id="conf-tiktokUrl" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-black outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">YouTube</label>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Youtube Canal URL</label>
                         <input type="text" id="conf-youtubeUrl" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none">
                     </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">WhatsApp de Ventas</label>
-                    <input type="text" id="conf-salesPhone" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none" placeholder="51999999999">
+
+                <div className="border-t border-gray-100 my-2"></div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Correo de Contacto (Footer)</label>
+                        <input type="text" id="conf-email" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Video Principal (Demo URL)</label>
+                        <input type="text" id="conf-mainVideo" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none" placeholder="https://youtube.com...">
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Correo de Contacto</label>
-                    <input type="text" id="conf-email" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                
+                {/* Hidden Sales Phone Field (Managed via Admin Panel usually, but kept for compatibility) */}
+                <input type="hidden" id="conf-salesPhone">
+
+                <div className="border-t border-gray-100 my-2 pt-2">
+                    <h4 class="text-xs font-bold text-red-500 flex items-center gap-1 mb-3"><i data-lucide="play-circle" class="w-3 h-3"></i> Videos Tutoriales (Barra Lateral)</h4>
+                    
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Tutorial #1</label>
+                            <input type="text" id="conf-tutorial1Url" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs mb-1 outline-none" placeholder="Link Video YouTube (Ej. https://youtu.be/...)">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="image" class="w-3 h-3 text-gray-400"></i>
+                                <input type="text" id="conf-tutorial1Thumb" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none" placeholder="URL Miniatura (Postimages, etc)">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Tutorial #2</label>
+                            <input type="text" id="conf-tutorial2Url" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs mb-1 outline-none" placeholder="Link Video YouTube">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="image" class="w-3 h-3 text-gray-400"></i>
+                                <input type="text" id="conf-tutorial2Thumb" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none" placeholder="URL Miniatura">
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
             <div class="px-6 py-4 bg-gray-50 flex justify-end gap-3 border-t border-gray-100 shrink-0">
                 <button onclick="closeConfigModal()" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-900">Cancelar</button>
                 <button onclick="saveConfig()" class="px-6 py-2 bg-gray-900 text-white text-sm font-bold rounded-lg shadow-md hover:bg-black transition-all flex items-center gap-2">
-                    <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios
+                    <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios del Sistema
                 </button>
             </div>
         </div>
@@ -898,12 +924,10 @@
         
         lucide.createIcons();
         
-        // --- SUPABASE CONFIGURATION FOR DYNAMIC LANDING ---
+        // --- SUPABASE CONFIGURATION ---
         const supabaseUrl = 'https://qxiaxenvmpwqepoqavyv.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4aWF4ZW52bXB3cWVwb3Fhdnl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1NjA0ODEsImV4cCI6MjA3OTEzNjQ4MX0.ghRijgSOw52jzu-egMOyHGX51odtCK_m6XZABlz24sA';
         
-        // Initialize Supabase client
-        // IMPORTANT: Use the same storage key as the main React app to share session if on same domain
         const supabase = createClient(supabaseUrl, supabaseKey, {
             auth: {
                 persistSession: true,
@@ -913,10 +937,35 @@
 
         let currentConfig = {};
         let isLoggedIn = false;
+        let isGodMode = false;
+        let clickCount = 0;
+
+        // --- GOD MODE TRIGGER ---
+        window.handleLogoClick = function(e) {
+            e.preventDefault();
+            clickCount++;
+            
+            if (clickCount === 4) {
+                setTimeout(() => {
+                    const password = prompt("Credencial de Administrador:");
+                    if (password === "Luis2021.") {
+                        isGodMode = true; 
+                        alert("✅ Modo Edición Activado");
+                        openConfigModal();
+                    } else {
+                        if (password !== null) alert("Acceso denegado");
+                    }
+                    clickCount = 0;
+                }, 50);
+            }
+            
+            // Reset counter
+            setTimeout(() => clickCount = 0, 1000);
+        };
 
         // Fetch Landing Config
         async function loadLandingConfig() {
-            // Check Auth Status
+            // Check Auth Status (Real session)
             const { data: { session } } = await supabase.auth.getSession();
             isLoggedIn = !!session;
             updateAuthStatus();
@@ -924,33 +973,28 @@
             try {
                 // 1. Check Local Override (Instant update for admin)
                 const localOverride = localStorage.getItem('olivia_landing_config_override');
+                let localParsed = {};
                 if (localOverride) {
-                    const parsed = JSON.parse(localOverride);
+                    localParsed = JSON.parse(localOverride);
                     console.log("Loading config from Local Storage override");
-                    applyConfig(parsed);
-                    currentConfig = parsed;
-                    // Don't return, allow fetching fresh data from DB to ensure sync if local is stale
+                    applyConfig(localParsed);
+                    currentConfig = localParsed;
                 }
 
-                // 2. Fetch from DB (Improved Logic: Get latest active admin)
-                // We fetch the top 5 admins and find the one with valid system_config
+                // 2. Fetch from DB
                 const { data, error } = await supabase
                     .from('profiles')
                     .select('settings') 
                     .eq('is_admin', true)
                     .neq('settings', null) 
-                    .limit(5); // Fetch a few to ensure we don't get a stale one
+                    .limit(5);
 
                 if (data && data.length > 0) {
-                    // Find the first profile that actually has the landing config
-                    // Ideally we should sort by updated_at, but we can iterate.
-                    // Assuming the most recently active admin is relevant.
                     let validProfile = null;
-                    
                     for (const p of data) {
                         if (p.settings && p.settings.system_config && p.settings.system_config.landing) {
                             validProfile = p;
-                            break; // Stop at first valid one found
+                            break; 
                         }
                     }
 
@@ -965,18 +1009,19 @@
                             tiktokUrl: landingConfig.tiktokUrl,
                             youtubeUrl: landingConfig.youtubeUrl,
                             contactEmail: landingConfig.contactEmail,
-                            salesPhone: sysConfig.salesPhoneNumber
+                            salesPhone: sysConfig.salesPhoneNumber,
+                            // Video Configs
+                            mainVideoUrl: landingConfig.mainVideoUrl,
+                            tutorial1Url: landingConfig.tutorial1Url,
+                            tutorial1Thumbnail: landingConfig.tutorial1Thumbnail,
+                            tutorial2Url: landingConfig.tutorial2Url,
+                            tutorial2Thumbnail: landingConfig.tutorial2Thumbnail,
                         };
                         
-                        // Apply ONLY if local override doesn't exist, or merge? 
-                        // Strategy: DB wins for public view. Local wins for Admin editing view until saved.
-                        if (!localOverride) {
-                            applyConfig(mergedConfig);
-                            currentConfig = mergedConfig;
-                        } else {
-                            // Sync currentConfig object for the modal inputs, but don't overwrite visual if local exists
-                            currentConfig = { ...mergedConfig, ...JSON.parse(localOverride) };
-                        }
+                        // Merge: DB data is base, Local is override for admin preview
+                        const finalConfig = { ...mergedConfig, ...localParsed };
+                        applyConfig(finalConfig);
+                        currentConfig = finalConfig;
                     }
                 }
             } catch (err) {
@@ -1015,11 +1060,35 @@
                 const waLink = document.getElementById('social-wa');
                 if(waLink) waLink.href = `https://wa.me/${config.salesPhone}`;
             }
+
+            // --- VIDEO CONFIG APPLIER ---
+            if (config.mainVideoUrl) {
+                const mainPlayer = document.getElementById('video-main-player');
+                if (mainPlayer) mainPlayer.href = config.mainVideoUrl;
+            }
+            
+            if (config.tutorial1Url) {
+                const t1Link = document.getElementById('tutorial-1-link');
+                if (t1Link) t1Link.href = config.tutorial1Url;
+            }
+            if (config.tutorial1Thumbnail) {
+                const t1Thumb = document.getElementById('tutorial-1-thumb');
+                if (t1Thumb) t1Thumb.style.backgroundImage = `url('${config.tutorial1Thumbnail}')`;
+            }
+            
+            if (config.tutorial2Url) {
+                const t2Link = document.getElementById('tutorial-2-link');
+                if (t2Link) t2Link.href = config.tutorial2Url;
+            }
+            if (config.tutorial2Thumbnail) {
+                const t2Thumb = document.getElementById('tutorial-2-thumb');
+                if (t2Thumb) t2Thumb.style.backgroundImage = `url('${config.tutorial2Thumbnail}')`;
+            }
         }
         
         // --- MODAL LOGIC ---
         window.openConfigModal = async function() {
-            // Refresh auth status check
+            // Check auth status again
             const { data: { session } } = await supabase.auth.getSession();
             isLoggedIn = !!session;
             updateAuthStatus();
@@ -1034,6 +1103,15 @@
             if (currentConfig.youtubeUrl) document.getElementById('conf-youtubeUrl').value = currentConfig.youtubeUrl;
             if (currentConfig.salesPhone) document.getElementById('conf-salesPhone').value = currentConfig.salesPhone;
             if (currentConfig.contactEmail) document.getElementById('conf-email').value = currentConfig.contactEmail;
+            
+            // New Video Inputs
+            if (currentConfig.mainVideoUrl) document.getElementById('conf-mainVideo').value = currentConfig.mainVideoUrl;
+            
+            if (currentConfig.tutorial1Url) document.getElementById('conf-tutorial1Url').value = currentConfig.tutorial1Url;
+            if (currentConfig.tutorial1Thumbnail) document.getElementById('conf-tutorial1Thumb').value = currentConfig.tutorial1Thumbnail;
+            
+            if (currentConfig.tutorial2Url) document.getElementById('conf-tutorial2Url').value = currentConfig.tutorial2Url;
+            if (currentConfig.tutorial2Thumbnail) document.getElementById('conf-tutorial2Thumb').value = currentConfig.tutorial2Thumbnail;
         };
 
         window.closeConfigModal = function() {
@@ -1041,7 +1119,6 @@
         };
         
         window.goToLogin = function() {
-            // Redirect to the app login page (assuming root or /app depending on deployment)
             window.location.href = "/"; 
         };
 
@@ -1053,9 +1130,13 @@
                 statusText.className = "flex items-center gap-2 text-green-600";
                 statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500"></span> Conectado como Admin (Nube)';
                 loginBtn.style.display = 'none';
+            } else if (isGodMode) {
+                statusText.className = "flex items-center gap-2 text-purple-600";
+                statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span> Modo Dios (Local)';
+                loginBtn.style.display = 'block';
             } else {
                 statusText.className = "flex items-center gap-2 text-orange-600";
-                statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span> Modo Invitado (Local)';
+                statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span> Modo Invitado (Solo Lectura)';
                 loginBtn.style.display = 'block';
             }
         }
@@ -1068,19 +1149,25 @@
                 tiktokUrl: document.getElementById('conf-tiktokUrl').value,
                 youtubeUrl: document.getElementById('conf-youtubeUrl').value,
                 contactEmail: document.getElementById('conf-email').value,
-                salesPhone: document.getElementById('conf-salesPhone').value
+                salesPhone: document.getElementById('conf-salesPhone').value,
+                
+                // New Fields
+                mainVideoUrl: document.getElementById('conf-mainVideo').value,
+                tutorial1Url: document.getElementById('conf-tutorial1Url').value,
+                tutorial1Thumbnail: document.getElementById('conf-tutorial1Thumb').value,
+                tutorial2Url: document.getElementById('conf-tutorial2Url').value,
+                tutorial2Thumbnail: document.getElementById('conf-tutorial2Thumb').value,
             };
 
-            // 1. Save Locally (Instant Feedback)
+            // 1. Always Save Locally (Immediate Feedback)
             localStorage.setItem('olivia_landing_config_override', JSON.stringify(newConfig));
             applyConfig(newConfig);
             
-            // 2. Try to Sync to Cloud (If Admin)
+            // 2. Try to Sync to Cloud
             if (isLoggedIn) {
                 try {
                     const { data: { session } } = await supabase.auth.getSession();
                     if (session && session.user) {
-                        // Reconstruct the full system_config object structure
                         const fullSystemConfig = {
                             salesPhoneNumber: newConfig.salesPhone,
                             landing: {
@@ -1089,15 +1176,18 @@
                                 instagramUrl: newConfig.instagramUrl,
                                 tiktokUrl: newConfig.tiktokUrl,
                                 youtubeUrl: newConfig.youtubeUrl,
-                                contactEmail: newConfig.contactEmail
+                                contactEmail: newConfig.contactEmail,
+                                // Add new fields to structure
+                                mainVideoUrl: newConfig.mainVideoUrl,
+                                tutorial1Url: newConfig.tutorial1Url,
+                                tutorial1Thumbnail: newConfig.tutorial1Thumbnail,
+                                tutorial2Url: newConfig.tutorial2Url,
+                                tutorial2Thumbnail: newConfig.tutorial2Thumbnail,
                             }
                         };
 
-                        // Fetch existing settings to merge properly
                         const { data: existingData } = await supabase.from('profiles').select('settings').eq('id', session.user.id).single();
                         const currentSettings = existingData?.settings || {};
-                        
-                        // Ensure nested structure is preserved
                         const existingSystemConfig = currentSettings.system_config || {};
                         
                         const mergedSettings = {
@@ -1122,20 +1212,19 @@
                         }
                     }
                 } catch (e) {
-                    console.error("Sync failed", e);
                     alert("⚠️ Error de conexión con la nube.");
                 }
             } else {
-                alert("💾 Guardado localmente. Inicia sesión para publicar cambios a todos los usuarios.");
+                // If in God Mode but not logged in via Supabase
+                alert("💾 Cambios guardados en LOCAL STORAGE (Modo Dios).\n\nNota: Para que otros usuarios vean estos cambios en la nube, debes iniciar sesión real en la app.");
             }
             
             closeConfigModal();
         };
         
-        // Initialize
         loadLandingConfig();
 
-
+        // ... (Existing Tabs, Rotate, Mobile Menu, Sales Bot Logic) ...
         // --- TABS LOGIC ---
         window.switchTab = function(stepId) {
              // Stop auto rotation if user clicks manually
@@ -1262,8 +1351,6 @@
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         // --- SALES BOT LOGIC ---
-        let chatOpen = false;
-        let hasGreeted = false;
         const messagesContainer = document.getElementById('chat-messages');
         const chatWindow = document.getElementById('chat-window');
         const widget = document.getElementById('olivia-widget');
